@@ -1,28 +1,34 @@
 <template>
   <!-- Initial Page start -->
   <div>
-    <b-jumbotron>
+    <b-jumbotron bg-variant="white">
       <h1 slot="header">Teacher's List</h1>
       <h5 slot="lead">List of Teacher's.</h5>
-       <div class="text-right">
-          <b-button v-b-modal.create-teacher v-on:click="edit_teacher('new')">Upload Document</b-button>
-        </div>
-      <hr class="my-4" />
-      <div class="w-100" style="text-align:center;">
-        <b-table class="table-list-responsive no-lines force-lines" :fields="fields" :items="teachers">
-          <template slot="actions" slot-scope="data">
-            <div>
-              <b-dropdown id="ddown-left" text="Left align" variant="primary" class="m-2">
-                <template slot="button-content">
-                  <i class="icon ion-ios-more"></i>
-                </template>
-                <b-dropdown-item v-b-modal.create-teacher variant="link" v-on:click="edit_teacher(data.item.id)">Edit</b-dropdown-item>
-                <b-dropdown-item @click="deleteTeacher(data.item.id)" href="#">Delete</b-dropdown-item>
-              </b-dropdown>
-            </div>
-          </template>
-        </b-table>
+      <div class="text-right">
+        <input type="text" v-model="filter" placeholder="Search title.."/>
+        <b-button v-b-modal.create-teacher v-on:click="edit_teacher('new')">Upload Document</b-button>
       </div>
+      <hr class="my-4" />
+      <div class="text-center">
+        <b-spinner type="grow" label="Spinning" v-if="teachers.length == 0" />
+      </div>
+      <template>
+        <div class="w-100" style="text-align:center;">
+          <b-table bordered :fields="fields" :items="teachers" :filter="filter">
+            <template slot="actions" slot-scope="data">
+              <div>
+                <b-dropdown id="ddown-dropright" dropright variant="primary" class="m-2">
+                  <template slot="button-content">
+                    <i class="icon ion-ios-more"></i>
+                  </template>
+                  <b-dropdown-item v-b-modal.create-teacher variant="link" v-on:click="edit_teacher(data.item)">Edit</b-dropdown-item>
+                  <b-dropdown-item @click="deleteTeacher(data.item)" href="#">Delete</b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </template>
+          </b-table>
+        </div>
+      </template>
       <create-teacher :teachers='teachers' :teacher='teacher'></create-teacher>
     </b-jumbotron>
   </div>
@@ -32,24 +38,51 @@
 import api from './scripts/api';
 import Finput from 'homes/components/Finput';
 import CreateTeacher from './CreateTeacher';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 export default {
   name: 'List',
   components: {
     Finput,
-    CreateTeacher
+    CreateTeacher,
+    Swal
   },
   methods: {
     edit_teacher: function(value){
-      if (value == 'edit') {
-        this.teacher = this.teacher
-      } else {
+      if (value == 'new') {
         this.teacher = {
           name: '',
           school: '',
-          students: ''
+          students_count: ''
         }
+      } else {
+        this.teacher = value
       }
+    },
+    deleteTeacher: function(teacher){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete  "+teacher.name+'  teacher',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          var self = this;
+          api.deleteTeacher(teacher.id)
+          .then(res => {
+            if(res && res.data && res.data.id) {
+              self.teachers = _.reject(self.teachers, { id: res.data.id })
+              self.$toasted.success("Folder is deleted successfully.")
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        }
+      })
     }
   },
   created() {
@@ -73,7 +106,7 @@ export default {
           label: 'School Name'
         },
         {
-          key: 'students',
+          key: 'students_count',
           label: 'Students Count'
         },
         {
@@ -82,11 +115,14 @@ export default {
         },
         {
           key: 'actions',
-          label: ''
+          label: '',
+          variant: 'danger'
         }
       ],
       teachers: [],
-      teacher: {}
+      teacher: {},
+      filter: '',
+      delete_teacher: {}
     }
   },
 }

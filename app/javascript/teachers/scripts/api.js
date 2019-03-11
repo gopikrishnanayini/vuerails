@@ -8,7 +8,6 @@ export default {
   },
 
   createTeacher(data) {
-    debugger
     const url = '/api/teachers'
     return data_service.post(url, data)
   },

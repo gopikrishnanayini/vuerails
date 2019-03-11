@@ -6,6 +6,7 @@ import router from 'teachers/scripts/router'
 import Vuelidate from 'vuelidate'
 import Toasted from 'vue-toasted';
 import VueRouter from 'vue-router'
+import 'sweetalert2/src/sweetalert2.scss'
 
 Vue.use(VueRouter);
 Vue.use(Toasted, {
