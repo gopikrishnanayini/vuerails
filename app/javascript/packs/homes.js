@@ -1,5 +1,5 @@
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import '../homes/styles/main.scss'
 
 import TurbolinksAdapter from 'vue-turbolinks';
