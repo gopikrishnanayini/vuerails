@@ -125,7 +125,7 @@ export default {
       items: [
         {
           text: 'Home',
-          href: '/homes'
+          href: '/'
         },
         {
           text: 'Sign Up',

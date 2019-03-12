@@ -36,7 +36,7 @@
           },
           {
             text: 'Home',
-            href: '/homes'
+            href: '/'
           }
         ]
       }
