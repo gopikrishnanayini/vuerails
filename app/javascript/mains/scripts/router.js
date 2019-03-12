@@ -8,7 +8,7 @@ export default new Router({
   mode: 'history',
   linkExactActiveClass: "active",
   routes: [{
-      path: '/homes',
+      path: '/',
       name: 'homes',
       component: MainList,
     }
