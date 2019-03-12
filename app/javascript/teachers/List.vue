@@ -1,6 +1,7 @@
 <template>
   <!-- Initial Page start -->
   <div>
+    <b-breadcrumb :items="items" />
     <b-jumbotron bg-variant="white">
       <h1 slot="header">Teacher's List</h1>
       <h5 slot="lead">List of Teacher's.</h5>
@@ -121,6 +122,24 @@ export default {
       ],
       teachers: [],
       teacher: {},
+      items: [
+        {
+          text: 'Home',
+          href: '/homes'
+        },
+        {
+          text: 'Sign Up',
+          href: '/users/sign_up'
+        },
+        {
+          text: 'Login',
+          href: '/users/sign_in'
+        },
+        {
+          text: 'Teacher',
+          href: '/teachers'
+        }
+      ],
       filter: '',
       delete_teacher: {}
     }
