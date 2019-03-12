@@ -15,4 +15,5 @@ test:
   database: vuerailsdemo_test
 
 production:
+  DATABASE_URL="mysql2://myuser:mypass@localhost/vuerailsdemo"
   url: <%= ENV['DATABASE_URL'] %>
